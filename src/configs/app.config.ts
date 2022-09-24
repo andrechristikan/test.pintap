@@ -8,7 +8,6 @@ export default registerAs(
     (): Record<string, any> => ({
         name: process.env.APP_NAME || 'ack',
         env: process.env.APP_ENV || 'development',
-        mode: process.env.APP_MODE || 'simple',
         language: process.env.APP_LANGUAGE || AppLanguage,
         timezone: process.env.APP_TZ || 'Asia/Jakarta',
 
@@ -36,8 +35,5 @@ export default registerAs(
                 maxSize: '2m',
             },
         },
-
-        httpOn: process.env.APP_HTTP_ON === 'true' ? true : false,
-        jobOn: process.env.APP_JOB_ON === 'true' || false,
     })
 );

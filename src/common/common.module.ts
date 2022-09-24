@@ -18,7 +18,6 @@ import { MessageModule } from 'src/common/message/message.module';
 import { LoggerModule } from 'src/common/logger/logger.module';
 import { DATABASE_CONNECTION_NAME } from 'src/common/database/constants/database.constant';
 import { PaginationModule } from 'src/common/pagination/pagination.module';
-import { SettingModule } from 'src/common/setting/setting.module';
 import Joi from 'joi';
 import { ENUM_MESSAGE_LANGUAGE } from './message/constants/message.enum.constant';
 import configs from 'src/configs';
@@ -41,10 +40,6 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
                     .valid('development', 'production')
                     .default('development')
                     .required(),
-                APP_MODE: Joi.string()
-                    .valid('simple', 'secure')
-                    .default('simple')
-                    .required(),
                 APP_LANGUAGE: Joi.string()
                     .valid(...Object.values(ENUM_MESSAGE_LANGUAGE))
                     .default('en')
@@ -64,9 +59,6 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
                 APP_DOC_NAME: Joi.string().required(),
                 APP_DOC_VERSION: Joi.number().required(),
 
-                APP_HTTP_ON: Joi.boolean().default(true).required(),
-                APP_JOB_ON: Joi.boolean().default(false).required(),
-
                 DATABASE_HOST: Joi.any()
                     .default('mongodb://localhost:27017')
                     .required(),
@@ -76,9 +68,6 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
                 DATABASE_DEBUG: Joi.boolean().default(false).required(),
                 DATABASE_OPTIONS: Joi.any().optional(),
 
-                MIDDLEWARE_TOLERANCE_TIMESTAMP: Joi.string()
-                    .default('5m')
-                    .required(),
                 MIDDLEWARE_TIMEOUT: Joi.string().default('30s').required(),
 
                 AUTH_JWT_SUBJECT: Joi.string().required(),
@@ -105,14 +94,6 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
                     .required(),
                 AUTH_JWT_REFRESH_TOKEN_NOT_BEFORE_EXPIRATION:
                     Joi.string().required(),
-
-                AUTH_BASIC_TOKEN_CLIENT_ID: Joi.string().optional(),
-                AUTH_BASIC_TOKEN_CLIENT_SECRET: Joi.string().optional(),
-
-                AWS_CREDENTIAL_KEY: Joi.string().optional(),
-                AWS_CREDENTIAL_SECRET: Joi.string().optional(),
-                AWS_S3_REGION: Joi.string().optional(),
-                AWS_S3_BUCKET: Joi.string().optional(),
             }),
             validationOptions: {
                 allowUnknown: true,
@@ -142,7 +123,6 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
         RequestModule,
         MiddlewareModule,
         AuthModule,
-        SettingModule,
     ],
 })
 export class CommonModule {}

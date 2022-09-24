@@ -34,16 +34,8 @@ export class LoggerInterceptor implements NestInterceptor<any> {
     ): Promise<Observable<Promise<any> | string>> {
         if (context.getType() === 'http') {
             const ctx: HttpArgumentsHost = context.switchToHttp();
-            const {
-                apiKey,
-                method,
-                originalUrl,
-                user,
-                id,
-                body,
-                params,
-                path,
-            } = ctx.getRequest<IRequestApp>();
+            const { method, originalUrl, user, id, body, params, path } =
+                ctx.getRequest<IRequestApp>();
             const responseExpress = ctx.getResponse<Response>();
             return next.handle().pipe(
                 tap(async (response: Promise<Record<string, any>>) => {
@@ -71,7 +63,6 @@ export class LoggerInterceptor implements NestInterceptor<any> {
                         description: loggerOptions.description
                             ? loggerOptions.description
                             : `Request ${method} called, url ${originalUrl}, and action ${loggerAction}`,
-                        apiKey: apiKey ? apiKey._id : undefined,
                         user: user ? user._id : undefined,
                         requestId: id,
                         method: method as ENUM_REQUEST_METHOD,

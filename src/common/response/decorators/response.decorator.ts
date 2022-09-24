@@ -286,11 +286,6 @@ export function Response<T>(
         ApiProduces('application/json'),
         RequestHeaderDoc(),
         ResponseDoc({
-            httpStatus: HttpStatus.SERVICE_UNAVAILABLE,
-            messagePath: 'http.serverError.serviceUnavailable',
-            statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_SERVICE_UNAVAILABLE,
-        }),
-        ResponseDoc({
             httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
             messagePath: 'http.serverError.internalServerError',
             statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_UNKNOWN,
@@ -348,11 +343,6 @@ export function ResponseExcel(options?: IResponseExcelOptions<void>) {
 
         // doc
         RequestHeaderDoc(),
-        ResponseDoc({
-            httpStatus: HttpStatus.SERVICE_UNAVAILABLE,
-            messagePath: 'http.serverError.serviceUnavailable',
-            statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_SERVICE_UNAVAILABLE,
-        }),
         ResponseDoc({
             httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
             messagePath: 'http.serverError.internalServerError',
@@ -461,11 +451,6 @@ export function ResponsePaging<T>(
         ApiProduces('application/json'),
         ApiConsumes('application/json'),
         RequestHeaderDoc(),
-        ResponseDoc({
-            httpStatus: HttpStatus.SERVICE_UNAVAILABLE,
-            messagePath: 'http.serverError.serviceUnavailable',
-            statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_SERVICE_UNAVAILABLE,
-        }),
         ResponseDoc({
             httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
             messagePath: 'http.serverError.internalServerError',

@@ -6,11 +6,6 @@ import { useContainer } from 'class-validator';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ResponseDefaultSerialization } from 'src/common/response/serializations/response.default.serialization';
 import { ResponsePagingSerialization } from 'src/common/response/serializations/response.paging.serialization';
-import {
-    AwsS3MultipartPartsSerialization,
-    AwsS3MultipartSerialization,
-} from 'src/common/aws/serializations/aws.s3-multipart.serialization';
-import { AwsS3Serialization } from 'src/common/aws/serializations/aws.s3.serialization';
 import { DatabaseOptionsService } from 'src/common/database/services/database.options.service';
 
 async function bootstrap() {
@@ -23,7 +18,6 @@ async function bootstrap() {
         databaseOptionsService.createMongooseOptions().uri;
     const appName: string = configService.get<string>('app.name');
     const env: string = configService.get<string>('app.env');
-    const mode: string = configService.get<string>('app.mode');
     const tz: string = configService.get<string>('app.timezone');
     const host: string = configService.get<string>('app.http.host');
     const port: number = configService.get<number>('app.http.port');
@@ -71,12 +65,6 @@ async function bootstrap() {
                 'refreshToken'
             );
 
-        if (mode === 'secure') {
-            documentConfig.addApiKey(
-                { type: 'apiKey', in: 'header', name: 'x-api-key' },
-                'apiKey'
-            );
-        }
         const documentBuild = documentConfig.build();
 
         const document = SwaggerModule.createDocument(app, documentBuild, {
@@ -84,9 +72,6 @@ async function bootstrap() {
             extraModels: [
                 ResponseDefaultSerialization,
                 ResponsePagingSerialization,
-                AwsS3MultipartPartsSerialization,
-                AwsS3MultipartSerialization,
-                AwsS3Serialization,
             ],
         });
 
@@ -110,14 +95,6 @@ async function bootstrap() {
         'NestApplication'
     );
     logger.log(`App Versioning is ${versioning}`, 'NestApplication');
-    logger.log(
-        `App Http is ${configService.get<boolean>('app.httpOn')}`,
-        'NestApplication'
-    );
-    logger.log(
-        `App Task is ${configService.get<boolean>('app.jobOn')}`,
-        'NestApplication'
-    );
     logger.log(`App Timezone is ${tz}`, 'NestApplication');
     logger.log(
         `Database Debug is ${configService.get<boolean>('database.debug')}`,

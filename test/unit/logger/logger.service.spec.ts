@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing';
 import { Types } from 'mongoose';
-import { ENUM_AUTH_ACCESS_FOR } from 'src/common/auth/constants/auth.enum.constant';
 import { CommonModule } from 'src/common/common.module';
 import {
     ENUM_LOGGER_ACTION,
@@ -25,11 +24,9 @@ describe('LoggerService', () => {
         action: ENUM_LOGGER_ACTION.TEST,
         description: 'test aaa',
         user: `${new Types.ObjectId()}`,
-        apiKey: `${new Types.ObjectId()}`,
         requestId: v4(),
         role: {
             _id: `${new Types.ObjectId()}`,
-            accessFor: ENUM_AUTH_ACCESS_FOR.SUPER_ADMIN,
         },
         method: ENUM_REQUEST_METHOD.GET,
         statusCode: 10000,

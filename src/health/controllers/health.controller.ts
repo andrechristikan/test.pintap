@@ -8,11 +8,9 @@ import {
     MongooseHealthIndicator,
 } from '@nestjs/terminus';
 import { Connection } from 'mongoose';
-import { AuthApiKey } from 'src/common/auth/decorators/auth.api-key.decorator';
 import { DatabaseConnection } from 'src/common/database/decorators/database.decorator';
 import { Response } from 'src/common/response/decorators/response.decorator';
 import { IResponse } from 'src/common/response/interfaces/response.interface';
-import { AwsHealthIndicator } from 'src/health/indicators/health.aws.indicator';
 import { HealthSerialization } from 'src/health/serializations/health.serialization';
 
 @ApiTags('health')
@@ -26,23 +24,11 @@ export class HealthController {
         private readonly health: HealthCheckService,
         private readonly memoryHealthIndicator: MemoryHealthIndicator,
         private readonly diskHealthIndicator: DiskHealthIndicator,
-        private readonly databaseIndicator: MongooseHealthIndicator,
-        private readonly awsIndicator: AwsHealthIndicator
+        private readonly databaseIndicator: MongooseHealthIndicator
     ) {}
 
     @Response('health.check', { classSerialization: HealthSerialization })
     @HealthCheck()
-    @AuthApiKey()
-    @Get('/aws')
-    async checkAws(): Promise<IResponse> {
-        return this.health.check([
-            () => this.awsIndicator.isHealthy('awsBucket'),
-        ]);
-    }
-
-    @Response('health.check', { classSerialization: HealthSerialization })
-    @HealthCheck()
-    @AuthApiKey()
     @Get('/database')
     async checkDatabase(): Promise<IResponse> {
         return this.health.check([
@@ -55,7 +41,6 @@ export class HealthController {
 
     @Response('health.check', { classSerialization: HealthSerialization })
     @HealthCheck()
-    @AuthApiKey()
     @Get('/memory-heap')
     async checkMemoryHeap(): Promise<IResponse> {
         return this.health.check([
@@ -69,7 +54,6 @@ export class HealthController {
 
     @Response('health.check', { classSerialization: HealthSerialization })
     @HealthCheck()
-    @AuthApiKey()
     @Get('/memory-rss')
     async checkMemoryRss(): Promise<IResponse> {
         return this.health.check([
@@ -83,7 +67,6 @@ export class HealthController {
 
     @Response('health.check', { classSerialization: HealthSerialization })
     @HealthCheck()
-    @AuthApiKey()
     @Get('/storage')
     async checkStorage(): Promise<IResponse> {
         return this.health.check([

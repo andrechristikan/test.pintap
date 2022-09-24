@@ -18,15 +18,11 @@ export class TimestampMiddleware implements NestMiddleware {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const mode: string = this.configService.get<string>('app.mode');
         let reqTs: string = req.headers['x-timestamp'] as string;
 
         const currentTimestamp: number = this.helperDateService.timestamp();
 
-        if (mode !== 'secure' || !reqTs) {
-            reqTs = `${currentTimestamp}`;
-        }
-
+        reqTs = reqTs || `${currentTimestamp}`;
         req.headers['x-timestamp'] = reqTs;
         req.timestamp = this.helperNumberService.create(reqTs);
 
