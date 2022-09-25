@@ -18,14 +18,12 @@ import {
 import { HelmetMiddleware } from './helmet/helmet.middleware';
 import { RateLimitMiddleware } from './rate-limit/rate-limit.middleware';
 import { UserAgentMiddleware } from './user-agent/user-agent.middleware';
-import { CompressionMiddleware } from './compression/compression.middleware';
 import { MaintenanceMiddleware } from './maintenance/maintenance.middleware';
 import { RequestIdMiddleware } from './request-id/request-id.middleware';
-import { TimezoneMiddleware } from './timezone/timezone.middleware';
 import { ResponseTimeMiddleware } from './response-time/response-time.middleware';
-import { TimestampMiddleware } from './timestamp/timestamp.middleware';
-import { ValidateCustomLanguageMiddleware } from './validate-custom-language/validate-custom-language.middleware';
+import { CustomLanguageMiddleware } from './custom-language/custom-language.middleware';
 import { VersionMiddleware } from './version/version.middleware';
+import { CompressionMiddleware } from 'src/common/middleware/compression/compression.middleware';
 
 @Module({})
 export class MiddlewareModule implements NestModule {
@@ -33,7 +31,6 @@ export class MiddlewareModule implements NestModule {
         consumer
             .apply(
                 RequestIdMiddleware,
-                TimezoneMiddleware,
                 JsonBodyParserMiddleware,
                 TextBodyParserMiddleware,
                 RawBodyParserMiddleware,
@@ -45,9 +42,8 @@ export class MiddlewareModule implements NestModule {
                 HelmetMiddleware,
                 RateLimitMiddleware,
                 UserAgentMiddleware,
-                ValidateCustomLanguageMiddleware,
+                CustomLanguageMiddleware,
                 ResponseTimeMiddleware,
-                TimestampMiddleware,
                 VersionMiddleware
             )
             .forRoutes('*')
