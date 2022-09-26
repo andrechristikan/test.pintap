@@ -25,10 +25,8 @@ ack-nestjs-mongoose is a [NestJs](http://nestjs.com) Boilerplate with [Mongoose]
 
 If you change env value of `APP_ENV` to `production` that will
 
-1. Do not write into console `Database debug` even when `DATABASE_DEBUG` is `true`
-2. Do not write into console for `DebuggerService` even when `APP_DEBUG` is `true`
-3. `CorsMiddleware` on and follow the `src/configs/middleware.config.ts`.
-4. Documentation will `off`
+1. `CorsMiddleware` on and follow the `src/configs/middleware.config.ts`.
+2. Documentation will `off`
 
 You can see our `e2e testing file` or read [section environment](ack-doc-env).
 
