@@ -7,7 +7,6 @@ import {
 import {
     ApiConsumes,
     ApiExtraModels,
-    ApiOkResponse,
     ApiParam,
     ApiProduces,
     ApiQuery,
@@ -15,7 +14,6 @@ import {
     getSchemaPath,
 } from '@nestjs/swagger';
 import { ENUM_ERROR_STATUS_CODE_ERROR } from 'src/common/error/constants/error.status-code.constant';
-import { ENUM_FILE_EXCEL_MIME } from 'src/common/file/constants/file.enum.constant';
 import { ENUM_PAGINATION_TYPE } from 'src/common/pagination/constants/pagination.enum.constant';
 import { RequestHeaderDoc } from 'src/common/request/decorators/request.decorator';
 import {
@@ -27,7 +25,6 @@ import {
     RESPONSE_SERIALIZATION_META_KEY,
 } from 'src/common/response/constants/response.constant';
 import { ResponseDefaultInterceptor } from 'src/common/response/interceptors/response.default.interceptor';
-import { ResponseExcelInterceptor } from 'src/common/response/interceptors/response.excel.interceptor';
 import { ResponsePagingInterceptor } from 'src/common/response/interceptors/response.paging.interceptor';
 import {
     IResponseDocOptions,
@@ -36,7 +33,6 @@ import {
     IResponseOptions,
     IResponseDocs,
     IResponsePagingOptions,
-    IResponseExcelOptions,
 } from 'src/common/response/interfaces/response.interface';
 import { ResponseDefaultSerialization } from 'src/common/response/serializations/response.default.serialization';
 import { ResponsePagingSerialization } from 'src/common/response/serializations/response.paging.serialization';
@@ -310,63 +306,6 @@ export function Response<T>(
 
 export function ResponsePagingType(type: ENUM_PAGINATION_TYPE) {
     return applyDecorators(SetMetadata(RESPONSE_PAGING_TYPE_META_KEY, type));
-}
-
-export function ResponseExcel(options?: IResponseExcelOptions<void>) {
-    const docs = [];
-    const docOptions =
-        options && options.doc ? (options.doc as IResponseDocOptions) : {};
-
-    if (!options || !options.excludeRequestBodyJson) {
-        docs.push(ApiConsumes('application/json'));
-    }
-
-    if (docOptions.responses) {
-        docs.push(
-            ...docOptions.responses.map((response) => ResponseDoc(response))
-        );
-    }
-
-    if (docOptions.params) {
-        docs.push(...docOptions.params.map((param) => ApiParam(param)));
-    }
-
-    if (docOptions.queries) {
-        docs.push(...docOptions.queries.map((query) => ApiQuery(query)));
-    }
-
-    return applyDecorators(
-        UseInterceptors(ResponseExcelInterceptor),
-        SetMetadata(
-            RESPONSE_SERIALIZATION_META_KEY,
-            options ? options.classSerialization : undefined
-        ),
-        SetMetadata(
-            RESPONSE_MESSAGE_PROPERTIES_META_KEY,
-            options ? options.messageProperties : undefined
-        ),
-
-        // doc
-        RequestHeaderDoc(),
-        ResponseDoc({
-            httpStatus: HttpStatus.SERVICE_UNAVAILABLE,
-            messagePath: 'http.serverError.serviceUnavailable',
-            statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_SERVICE_UNAVAILABLE,
-        }),
-        ResponseDoc({
-            httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
-            messagePath: 'http.serverError.internalServerError',
-            statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_UNKNOWN,
-        }),
-        ResponseDoc({
-            httpStatus: HttpStatus.REQUEST_TIMEOUT,
-            messagePath: 'http.serverError.requestTimeout',
-            statusCode: ENUM_ERROR_STATUS_CODE_ERROR.ERROR_REQUEST_TIMEOUT,
-        }),
-        ApiOkResponse(),
-        ApiProduces(ENUM_FILE_EXCEL_MIME.XLSX),
-        ...docs
-    );
 }
 
 export function ResponsePaging<T>(

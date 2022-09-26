@@ -1,5 +1,4 @@
 import {
-    IAuthPassword,
     IAuthPayloadOptions,
     IAuthRefreshTokenOptions,
 } from 'src/common/auth/interfaces/auth.interface';
@@ -20,11 +19,6 @@ export interface IAuthService {
 
     payloadRefreshToken(token: string): Promise<Record<string, any>>;
 
-    validateUser(
-        passwordString: string,
-        passwordHash: string
-    ): Promise<boolean>;
-
     createPayloadAccessToken(
         data: Record<string, any>,
         rememberMe: boolean,
@@ -36,10 +30,6 @@ export interface IAuthService {
         rememberMe: boolean,
         options?: IAuthPayloadOptions
     ): Promise<Record<string, any>>;
-
-    createPassword(password: string): Promise<IAuthPassword>;
-
-    checkPasswordExpired(passwordExpired: Date): Promise<boolean>;
 
     getTokenType(): Promise<string>;
 

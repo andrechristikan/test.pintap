@@ -1,9 +1,4 @@
-import {
-    Module,
-    NestModule,
-    MiddlewareConsumer,
-    RequestMethod,
-} from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { CorsMiddleware } from './cors/cors.middleware';
 import {
     JsonBodyParserMiddleware,
@@ -18,7 +13,6 @@ import {
 import { HelmetMiddleware } from './helmet/helmet.middleware';
 import { RateLimitMiddleware } from './rate-limit/rate-limit.middleware';
 import { UserAgentMiddleware } from './user-agent/user-agent.middleware';
-import { MaintenanceMiddleware } from './maintenance/maintenance.middleware';
 import { RequestIdMiddleware } from './request-id/request-id.middleware';
 import { ResponseTimeMiddleware } from './response-time/response-time.middleware';
 import { CustomLanguageMiddleware } from './custom-language/custom-language.middleware';
@@ -43,42 +37,6 @@ export class MiddlewareModule implements NestModule {
                 CustomLanguageMiddleware,
                 ResponseTimeMiddleware,
                 VersionMiddleware
-            )
-            .forRoutes('*')
-            .apply(MaintenanceMiddleware)
-            .exclude(
-                {
-                    path: 'api/v:version*/user/login',
-                    method: RequestMethod.POST,
-                },
-                {
-                    path: 'api/user/login',
-                    method: RequestMethod.POST,
-                },
-                {
-                    path: 'api/v:version*/user/refresh',
-                    method: RequestMethod.POST,
-                },
-                {
-                    path: 'api/user/refresh',
-                    method: RequestMethod.POST,
-                },
-                {
-                    path: 'api/v:version*/admin/setting/(.*)',
-                    method: RequestMethod.ALL,
-                },
-                {
-                    path: 'api/admin/setting/(.*)',
-                    method: RequestMethod.ALL,
-                },
-                {
-                    path: 'api/v:version*/setting/(.*)',
-                    method: RequestMethod.ALL,
-                },
-                {
-                    path: 'api/setting/(.*)',
-                    method: RequestMethod.ALL,
-                }
             )
             .forRoutes('*');
     }

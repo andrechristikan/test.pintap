@@ -167,16 +167,9 @@ export class AuthService implements IAuthService {
         );
 
         const salt: string = this.helperHashService.randomSalt(saltLength);
-
-        const passwordExpiredInMs: number = this.configService.get<number>(
-            'auth.password.expiredInMs'
-        );
-        const passwordExpired: Date =
-            this.helperDateService.forwardInMilliseconds(passwordExpiredInMs);
         const passwordHash = this.helperHashService.bcrypt(password, salt);
         return {
             passwordHash,
-            passwordExpired,
             salt,
         };
     }

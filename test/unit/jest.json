@@ -13,11 +13,8 @@
     "collectCoverageFrom": [
         "./src/common/auth/services/**",
         "./src/common/database/services/**",
-        "./src/common/debugger/services/**",
-        "./src/common/logger/services/**",
         "./src/common/message/services/**",
         "./src/common/pagination/services/**",
-        "./src/common/setting/services/**",
         "./src/common/helper/services/**"
     ],
     "coverageThreshold": {

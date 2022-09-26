@@ -6,11 +6,6 @@ import { useContainer } from 'class-validator';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ResponseDefaultSerialization } from 'src/common/response/serializations/response.default.serialization';
 import { ResponsePagingSerialization } from 'src/common/response/serializations/response.paging.serialization';
-import {
-    AwsS3MultipartPartsSerialization,
-    AwsS3MultipartSerialization,
-} from 'src/common/aws/serializations/aws.s3-multipart.serialization';
-import { AwsS3Serialization } from 'src/common/aws/serializations/aws.s3.serialization';
 import { DatabaseOptionsService } from 'src/common/database/services/database.options.service';
 
 async function bootstrap() {
@@ -67,10 +62,6 @@ async function bootstrap() {
             .addBearerAuth(
                 { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
                 'refreshToken'
-            )
-            .addApiKey(
-                { type: 'apiKey', in: 'header', name: 'x-api-key' },
-                'apiKey'
             );
 
         const documentBuild = documentConfig.build();
@@ -80,9 +71,6 @@ async function bootstrap() {
             extraModels: [
                 ResponseDefaultSerialization,
                 ResponsePagingSerialization,
-                AwsS3MultipartPartsSerialization,
-                AwsS3MultipartSerialization,
-                AwsS3Serialization,
             ],
         });
 

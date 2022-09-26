@@ -1,7 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { ApiParamOptions, ApiQueryOptions } from '@nestjs/swagger';
 import { ClassConstructor } from 'class-transformer';
-import { IHelperFileExcelRows } from 'src/common/helper/interfaces/helper.interface';
 import { IMessageOptionsProperties } from 'src/common/message/interfaces/message.interface';
 
 // Doc
@@ -50,10 +49,6 @@ export interface IResponsePagingOptions<T>
     extends Omit<IResponseOptions<T>, 'excludeRequestBodyJson' | 'doc'> {
     doc?: IResponseDocPagingOptions;
 }
-
-export type IResponseExcelOptions<T> = IResponseOptions<T>;
-
-export type IResponseExcel = IHelperFileExcelRows[];
 
 export interface IResponse {
     metadata?: IResponseMetadata;

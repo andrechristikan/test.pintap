@@ -9,11 +9,6 @@ import { Logger, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ResponseDefaultSerialization } from 'src/common/response/serializations/response.default.serialization';
 import { ResponsePagingSerialization } from 'src/common/response/serializations/response.paging.serialization';
-import {
-    AwsS3MultipartPartsSerialization,
-    AwsS3MultipartSerialization,
-} from 'src/common/aws/serializations/aws.s3-multipart.serialization';
-import { AwsS3Serialization } from 'src/common/aws/serializations/aws.s3.serialization';
 
 const binaryMimeTypes: string[] = [];
 let cachedServer: Handler;
@@ -83,9 +78,6 @@ async function bootstrap() {
             extraModels: [
                 ResponseDefaultSerialization,
                 ResponsePagingSerialization,
-                AwsS3MultipartPartsSerialization,
-                AwsS3MultipartSerialization,
-                AwsS3Serialization,
             ],
         });
 

@@ -1,10 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { WinstonModule } from 'nest-winston';
-import {
-    DebuggerModule,
-    DebuggerOptionsModule,
-} from 'src/common/debugger/debugger.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DatabaseOptionsModule } from 'src/common/database/database.module';
 import { DatabaseOptionsService } from 'src/common/database/services/database.options.service';
@@ -15,14 +10,11 @@ import { RequestModule } from 'src/common/request/request.module';
 import { MiddlewareModule } from 'src/common/middleware/middleware.module';
 import { AuthModule } from 'src/common/auth/auth.module';
 import { MessageModule } from 'src/common/message/message.module';
-import { LoggerModule } from 'src/common/logger/logger.module';
 import { DATABASE_CONNECTION_NAME } from 'src/common/database/constants/database.constant';
-import { PaginationModule } from 'src/common/pagination/pagination.module';
-import { SettingModule } from 'src/common/setting/setting.module';
 import Joi from 'joi';
 import { ENUM_MESSAGE_LANGUAGE } from './message/constants/message.enum.constant';
 import configs from 'src/configs';
-import { DebuggerOptionService } from 'src/common/debugger/services/debugger.options.service';
+import { PaginationModule } from 'src/common/pagination/pagination.module';
 
 @Module({
     controllers: [],
@@ -45,7 +37,6 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
                     .default('en')
                     .required(),
 
-                HTTP_ENABLE: Joi.boolean().default(true).required(),
                 HTTP_HOST: [
                     Joi.string().ip({ version: 'ipv4' }).required(),
                     Joi.valid('localhost').required(),
@@ -54,13 +45,6 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
                 HTTP_VERSIONING_ENABLE: Joi.boolean().default(true).required(),
                 HTTP_VERSION: Joi.number().required(),
 
-                DEBUGGER_HTTP_WRITE_INTO_FILE: Joi.boolean()
-                    .default(false)
-                    .required(),
-                DEBUGGER_SYSTEM_WRITE_INTO_FILE: Joi.boolean()
-                    .default(false)
-                    .required(),
-
                 MIDDLEWARE_TIMESTAMP_TOLERANCE: Joi.string()
                     .default('5m')
                     .required(),
@@ -68,8 +52,6 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
 
                 DOC_NAME: Joi.string().required(),
                 DOC_VERSION: Joi.number().required(),
-
-                JOB_ENABLE: Joi.boolean().default(false).required(),
 
                 DATABASE_HOST: Joi.any()
                     .default('mongodb://localhost:27017')
@@ -110,22 +92,11 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
                 SERVERLESS_AWS_API_GATEWAY: Joi.string().optional(),
                 SERVERLESS_AWS_PROFILE: Joi.string().optional(),
                 SERVERLESS_AWS_S3_BUCKET: Joi.string().optional(),
-
-                AWS_CREDENTIAL_KEY: Joi.string().optional(),
-                AWS_CREDENTIAL_SECRET: Joi.string().optional(),
-                AWS_S3_REGION: Joi.string().optional(),
-                AWS_S3_BUCKET: Joi.string().optional(),
             }),
             validationOptions: {
                 allowUnknown: true,
                 abortEarly: true,
             },
-        }),
-        WinstonModule.forRootAsync({
-            inject: [DebuggerOptionService],
-            imports: [DebuggerOptionsModule],
-            useFactory: (debuggerOptionsService: DebuggerOptionService) =>
-                debuggerOptionsService.createLogger(),
         }),
         MongooseModule.forRootAsync({
             connectionName: DATABASE_CONNECTION_NAME,
@@ -136,15 +107,12 @@ import { DebuggerOptionService } from 'src/common/debugger/services/debugger.opt
         }),
         MessageModule,
         HelperModule,
-        PaginationModule,
         ErrorModule,
-        LoggerModule,
-        DebuggerModule,
         ResponseModule,
         RequestModule,
         MiddlewareModule,
         AuthModule,
-        SettingModule,
+        PaginationModule,
     ],
 })
 export class CommonModule {}

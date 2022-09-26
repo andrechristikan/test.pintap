@@ -1,10 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthApiKey } from 'src/common/auth/decorators/auth.api-key.decorator';
 import { User } from 'src/common/auth/decorators/auth.decorator';
 import { AuthJwtGuard } from 'src/common/auth/decorators/auth.jwt.decorator';
-import { AuthInfoSerialization } from 'src/common/auth/serializations/auth.info.serialization';
-import { RequestValidateUserAgent } from 'src/common/request/decorators/request.decorator';
 import { Response } from 'src/common/response/decorators/response.decorator';
 import { IResponse } from 'src/common/response/interfaces/response.interface';
 
@@ -14,10 +11,8 @@ import { IResponse } from 'src/common/response/interfaces/response.interface';
     path: '/auth',
 })
 export class AuthController {
-    @Response('auth.info', { classSerialization: AuthInfoSerialization })
+    @Response('auth.info')
     @AuthJwtGuard()
-    @AuthApiKey()
-    @RequestValidateUserAgent()
     @Get('/info')
     async info(@User() user: Record<string, any>): Promise<IResponse> {
         return user;

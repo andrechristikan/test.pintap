@@ -4,13 +4,12 @@ import {
     ArgumentsHost,
     HttpException,
     HttpStatus,
-    Optional,
 } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ValidationError } from 'class-validator';
 import { Response } from 'express';
-import { DebuggerService } from 'src/common/debugger/services/debugger.service';
 import { ERROR_TYPE } from 'src/common/error/constants/error.enum.constant';
 import {
     IErrorException,
@@ -30,7 +29,7 @@ import { IRequestApp } from 'src/common/request/interfaces/request.interface';
 @Catch()
 export class ErrorHttpFilter implements ExceptionFilter {
     constructor(
-        @Optional() private readonly debuggerService: DebuggerService,
+        private readonly configService: ConfigService,
         private readonly messageService: MessageService,
         private readonly httpAdapterHost: HttpAdapterHost,
         private readonly helperDateService: HelperDateService
@@ -45,34 +44,25 @@ export class ErrorHttpFilter implements ExceptionFilter {
             const responseExpress: Response = ctx.getResponse<Response>();
 
             // get request headers
-            const reqCustomLang = request.header('x-custom-lang');
+            const reqCustomLang =
+                request.header('x-custom-lang') ||
+                this.configService.get<string>('app.language');
 
             // get metadata
-            const __class = request.__class;
-            const __function = request.__function;
             const __path = request.path;
             const __requestId = request.id;
             const __timestamp =
                 request.timestamp || this.helperDateService.timestamp();
             const __timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const __version = request.version;
-            const __repoVersion = request.repoVersion;
+            const __version =
+                request.version ||
+                this.configService.get<string>('app.versioning.version');
+            const __repoVersion =
+                request.repoVersion ||
+                this.configService.get<string>('app.repoVersion');
 
             // message base in language
             const { customLang } = ctx.getRequest<IRequestApp>();
-
-            // Debugger
-            this.debuggerService.error(
-                request && request.id ? request.id : ErrorHttpFilter.name,
-                {
-                    description: exception.message,
-                    class: __class,
-                    function: __function,
-                    path: __path,
-                },
-                exception
-            );
-
             // Restructure
             const response = exception.getResponse();
 
@@ -148,22 +138,9 @@ export class ErrorHttpFilter implements ExceptionFilter {
             // In certain situations `httpAdapter` might not be available in the
             // constructor method, thus we should resolve it here.
             const { httpAdapter } = this.httpAdapterHost;
-            const __path = httpAdapter.getRequestUrl(ctx.getRequest());
             const message: string = (await this.messageService.get(
                 'http.serverError.internalServerError'
             )) as string;
-
-            // Debugger
-            this.debuggerService.error(
-                ErrorHttpFilter.name,
-                {
-                    description: message,
-                    class: ErrorHttpFilter.name,
-                    function: 'catch',
-                    path: __path,
-                },
-                exception
-            );
 
             const responseBody = {
                 statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
