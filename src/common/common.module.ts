@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
-import { DatabaseOptionsModule } from 'src/common/database/database.module';
-import { DatabaseOptionsService } from 'src/common/database/services/database.options.service';
+import { DatabaseModule } from 'src/common/database/database.module';
 import { HelperModule } from 'src/common/helper/helper.module';
 import { ErrorModule } from 'src/common/error/error.module';
 import { ResponseModule } from 'src/common/response/response.module';
@@ -10,7 +8,6 @@ import { RequestModule } from 'src/common/request/request.module';
 import { MiddlewareModule } from 'src/common/middleware/middleware.module';
 import { AuthModule } from 'src/common/auth/auth.module';
 import { MessageModule } from 'src/common/message/message.module';
-import { DATABASE_CONNECTION_NAME } from 'src/common/database/constants/database.constant';
 import Joi from 'joi';
 import { ENUM_MESSAGE_LANGUAGE } from './message/constants/message.enum.constant';
 import configs from 'src/configs';
@@ -98,13 +95,7 @@ import { PaginationModule } from 'src/common/pagination/pagination.module';
                 abortEarly: true,
             },
         }),
-        MongooseModule.forRootAsync({
-            connectionName: DATABASE_CONNECTION_NAME,
-            inject: [DatabaseOptionsService],
-            imports: [DatabaseOptionsModule],
-            useFactory: (databaseOptionsService: DatabaseOptionsService) =>
-                databaseOptionsService.createMongooseOptions(),
-        }),
+        DatabaseModule,
         MessageModule,
         HelperModule,
         ErrorModule,

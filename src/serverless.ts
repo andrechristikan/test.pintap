@@ -10,7 +10,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ResponseDefaultSerialization } from 'src/common/response/serializations/response.default.serialization';
 import { ResponsePagingSerialization } from 'src/common/response/serializations/response.paging.serialization';
 
-const binaryMimeTypes: string[] = [];
 let cachedServer: Handler;
 
 async function bootstrap() {
@@ -53,11 +52,12 @@ async function bootstrap() {
     const docPrefix: string = configService.get<string>('doc.prefix');
 
     if (env !== 'production') {
-        const documentConfig = new DocumentBuilder()
+        const documentBuild = new DocumentBuilder()
             .setTitle(docName)
             .setDescription(docDesc)
             .setVersion(docVersion)
             .addTag("API's")
+            .addServer(`/${env}`)
             .addBearerAuth(
                 { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
                 'accessToken'
@@ -69,9 +69,8 @@ async function bootstrap() {
             .addApiKey(
                 { type: 'apiKey', in: 'header', name: 'x-api-key' },
                 'apiKey'
-            );
-
-        const documentBuild = documentConfig.build();
+            )
+            .build();
 
         const document = SwaggerModule.createDocument(app, documentBuild, {
             deepScanRoutes: true,
@@ -98,12 +97,12 @@ async function bootstrap() {
     logger.log(`==========================================================`);
 
     logger.log(`Database uri ${databaseUri}`, 'NestApplication');
-    logger.log(`Docs will serve on /${docPrefix}`, 'NestApplication');
+    logger.log(`Docs will serve on ${docPrefix}`, 'NestApplication');
 
     logger.log(`==========================================================`);
 
     const expressApp = app.getHttpAdapter().getInstance();
-    return serverlessExpress({ app: expressApp, binaryMimeTypes });
+    return serverlessExpress({ app: expressApp });
 }
 
 export const handler: Handler = async (
@@ -114,5 +113,6 @@ export const handler: Handler = async (
     if (!cachedServer) {
         cachedServer = await bootstrap();
     }
+
     return cachedServer(event, context, callback);
 };

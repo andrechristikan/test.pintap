@@ -122,6 +122,16 @@ export function RequestHeaderDoc(): any {
                 type: 'string',
             },
         }),
+        ApiHeader({
+            name: 'user-agent',
+            description: 'User agent header',
+            required: true,
+            schema: {
+                example:
+                    'Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion',
+                type: 'string',
+            },
+        }),
         ResponseDoc({
             httpStatus: HttpStatus.FORBIDDEN,
             statusCode:
