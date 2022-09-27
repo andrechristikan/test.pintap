@@ -21,6 +21,7 @@ Describes which version .
 
 - Repository Design Pattern / Data Access Layer Design Pattern
 - Dependency Injection
+- Adopt SOLID principle
 - Support clean architecture / hexagonal architecture
 - Support microservice architecture
 
