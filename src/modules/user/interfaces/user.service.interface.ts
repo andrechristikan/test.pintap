@@ -28,15 +28,30 @@ export interface IUserService {
         options?: IDatabaseFindOneOptions
     ): Promise<UserDocument>;
 
+    findOneByUsername(
+        username: string,
+        options?: IDatabaseFindOneOptions
+    ): Promise<UserDocument>;
+
     getTotal(
         find?: Record<string, any>,
         options?: IDatabaseOptions
     ): Promise<number>;
 
     create(
-        data: UserCreateDto,
-        passwordHash: IAuthPassword,
+        { username, name }: UserCreateDto,
+        { passwordHash, salt }: IAuthPassword,
         options?: IDatabaseCreateOptions
+    ): Promise<UserDocument>;
+
+    softDeleteOneById(
+        _id: string,
+        options?: IDatabaseDeleteOptions
+    ): Promise<UserDocument>;
+
+    softDeleteOne(
+        find: Record<string, any>,
+        options?: IDatabaseDeleteOptions
     ): Promise<UserDocument>;
 
     deleteOneById(

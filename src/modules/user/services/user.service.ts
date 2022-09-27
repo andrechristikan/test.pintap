@@ -44,7 +44,7 @@ export class UserService implements IUserService {
     async findOneByUsername(
         username: string,
         options?: IDatabaseFindOneOptions
-    ) {
+    ): Promise<UserDocument> {
         return this.userRepository.findOne<UserDocument>(
             {
                 username: {
