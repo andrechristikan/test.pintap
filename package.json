@@ -74,7 +74,7 @@
     "mongoose": "^6.6.1",
     "morgan": "^1.10.0",
     "nestjs-command": "^3.1.2",
-    "nestjs-i18n": "^9.1.10",
+    "nestjs-i18n": "^9.2.2",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
